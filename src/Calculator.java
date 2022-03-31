@@ -1,6 +1,7 @@
 import java.util.Scanner;
 
 public class Calculator {
+    static int result = 0;
     public static void main(String[] args) {
         String result;
         boolean singExit = false;
@@ -13,9 +14,11 @@ public class Calculator {
         Scanner srcMenu = new Scanner(System.in);
         Scanner srcOperation = new Scanner(System.in);
         Scanner srcExpression = new Scanner(System.in);
-        String Expression;
+        //String Expression;
         int a = 0;
         int b = 0;
+        String answer;
+        int res = 0;
         // строим меню пока не будет выбран пункт "3. Выход""
         while (!singExit){
             mainMenu();
@@ -101,7 +104,27 @@ public class Calculator {
                             System.out.println("Не удалось распознать операцию! Повторите выбор");
                             continue;
                     }
-                    System.out.println(solutionExample(operation, a, b));
+                    a = Calculator.result;
+                    boolean bIsInt = false;
+                    if (choiceOperation != 5) {
+                        while (!bIsInt) {
+                            System.out.println("Введите второе число :");
+                            String bText = srcMenu.nextLine();
+                            // распознование числа
+                            if (!isNumber(bText)) {
+                                System.out.println("Не удалось распознать второе число! Повторите ввод:");
+                                continue;
+                            }
+                            b = Integer.parseInt(bText);
+                            bIsInt = true;
+                        }
+                    }
+                    answer = solutionExample(operation, a, b);
+                    System.out.println(answer);
+                    // после операции сравнения внутренне меню не доступно
+                    if ( choiceOperation == 7 ) {
+                        signRepeatOper = false;
+                    }
                 }
             }
             // Выход из программы
@@ -144,27 +167,33 @@ public class Calculator {
             answer =  "\"" + operation + "\" - " + a + " " + operation + " " + b + " = " ;
         switch (operation) {
             case "+" :
-                answer += addition( a, b );
+                Calculator.result =  addition( a, b );
+                answer += Calculator.result;
                 break;
             case "-" :
-                answer += subtraction( a, b );
+                Calculator.result = subtraction( a, b );
+                answer += Calculator.result;
                 break;
             case "*" :
-                answer += multiplication( a, b );
+                Calculator.result = multiplication( a, b );
+                answer += Calculator.result;
                 break;
             case "/" :
                 if ( b == 0 ) { answer = "На ноль делить нельзя!"; break;}
-                answer += division( a, b );
+                Calculator.result = division( a, b );
+                answer += Calculator.result;
                 break;
             case "^" :
-                answer += extent( a, b );
+                Calculator.result = extent( a, b );
+                answer += Calculator.result;
                 break;
             case "?" :
                 answer += comparison( a, b );
                 break;
             case "!" :
                 if ( a < 0 ) { answer = "Факториал отрицательного числа не существует"; break; }
-                answer = "\"!\" - " + a + "!" + diffFactorial(a) + " = "  + factorial(a);
+                Calculator.result = factorial(a);
+                answer = "\"!\" - " + a + "!" + diffFactorial(a) + " = "  + Calculator.result;
                 break;
             default: answer = "Не удалось распознать операцию!";
 
